@@ -33,4 +33,9 @@ class UserFragment : Fragment() {
             binding.emailTextView.text = user.email
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

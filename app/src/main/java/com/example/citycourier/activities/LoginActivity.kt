@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         FirebaseApp.initializeApp(this)
-        Firebase.auth.useEmulator(BuildConfig.FIREBASE_HOST_PORT, 9099)
+//        Firebase.auth.useEmulator(BuildConfig.FIREBASE_HOST_PORT, 9099)
         googleAuthService = GoogleAuthService(Identity.getSignInClient(this@LoginActivity))
 
         if (viewModel.firebaseAuth.currentUser != null) {
