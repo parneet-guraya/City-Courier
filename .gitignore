@@ -19,3 +19,6 @@ local.properties
 /firestore.indexes.json
 /firestore.rules
 /storage.rules
+/firebase-debug.log
+/firestore-debug.log
+/ui-debug.log
