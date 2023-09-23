@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">City Courier</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="travel_fragment_title">Travel</string>
+    <string name="parcel_fragment_title">Parcel</string>
+    <string name="user_fragment_title">User</string>
 </resources>

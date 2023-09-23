@@ -27,12 +27,18 @@ class GoogleAuthService(private val signInClient: SignInClient) {
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun signInWithGoogleCredentials(intent: Intent) {
+    suspend fun signInWithGoogleCredentials(intent: Intent, taskCallBack: TaskCallBack?) {
         val credentials = signInClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credentials.googleIdToken
         val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
         try {
-            val user = auth.signInWithCredential(googleCredentials).await().user
+            val task = auth.signInWithCredential(googleCredentials)
+            taskCallBack?.let { callback ->
+                task.addOnCompleteListener { callback.onComplete() }
+                task.addOnSuccessListener { callback.onSuccess() }
+                task.addOnFailureListener { exception -> callback.onFailure(exception) }
+            }
+            task.await()
         } catch (e: Exception) {
             // catch exceptions
             e.printStackTrace()
@@ -71,4 +77,16 @@ class GoogleAuthService(private val signInClient: SignInClient) {
             )
             .build()
     }
+}
+
+interface TaskCallBack {
+    fun onComplete() {
+        // do nothing
+    }
+
+    fun onSuccess() {
+        // do nothing
+    }
+
+    fun onFailure(exception: Exception)
 }

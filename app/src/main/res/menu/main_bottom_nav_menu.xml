@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/travelFragment"
+        android:icon="@drawable/travel_drawable"
+        android:title="@string/travel_fragment_title" />
+    <item
+        android:id="@+id/parcelFragment"
+        android:icon="@drawable/baseline_inbox_24"
+        android:title="@string/parcel_fragment_title" />
+    <item
+        android:id="@+id/userFragment"
+        android:icon="@drawable/user_drawable"
+        android:title="@string/user_fragment_title" />
+
+</menu>
