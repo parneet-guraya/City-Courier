@@ -2,6 +2,7 @@ package com.example.citycourier.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.example.citycourier.activities.ChooseRouteActivity
 import com.example.citycourier.activities.logDebug
 import com.example.citycourier.databinding.FragmentTravelBinding
+import com.google.android.gms.maps.model.LatLng
 
 class TravelFragment : Fragment() {
     private var _binding: FragmentTravelBinding? = null
@@ -46,9 +48,31 @@ class TravelFragment : Fragment() {
                 logDebug("Choose Location activity result: ${intent != null}")
                 if (intent != null) {
                     // get the Location object here
-                    logDebug(
-                        intent.getStringExtra(ChooseRouteActivity.EXTRA_KEY_GEO_HASH).orEmpty()
-                    )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        logDebug(
+                            intent.getParcelableExtra(
+                                ChooseRouteActivity.EXTRA_KEY_GEOCODE_START,
+                                LatLng::class.java
+                            )
+                                .toString()
+                        )
+                        logDebug(
+                            intent.getParcelableExtra(
+                                ChooseRouteActivity.EXTRA_KEY_GEOCODE_END,
+                                LatLng::class.java
+                            )
+                                .toString()
+                        )
+                    } else {
+                        logDebug(
+                            intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_START)
+                                .toString()
+                        )
+                        logDebug(
+                            intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_END)
+                                .toString()
+                        )
+                    }
                 } else {
                     // handle empty result
                 }
