@@ -56,6 +56,8 @@ dependencies {
     // firebase storage
     implementation("com.google.firebase:firebase-storage-ktx")
 
+    // geofire for geohashing handling
+    implementation("com.firebase:geofire-android-common:3.2.0")
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.7.0")

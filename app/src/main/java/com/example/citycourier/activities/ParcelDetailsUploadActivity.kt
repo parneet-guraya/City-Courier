@@ -21,6 +21,8 @@ import com.example.citycourier.model.Response
 import com.example.citycourier.model.User
 import com.example.citycourier.service.ParcelServiceImpl
 import com.example.citycourier.viewmodels.ParcelDetailsUploadViewModel
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
@@ -122,10 +124,15 @@ class ParcelDetailsUploadActivity : AppCompatActivity() {
         val parcelDes: String = binding.descriptionEditText.text.toString()
         val parcel = Parcel(parcelTitle, url, parcelDes)
         val startLoc =
-            Location("geohash", startLocation?.latitude!!, startLocation?.longitude!!)
+            generateLocationWithGeoHash(startLocation?.latitude!!, startLocation?.longitude!!)
         val endLoc =
-            Location("geohash", endLocation?.latitude!!, endLocation?.longitude!!)
+            generateLocationWithGeoHash(endLocation?.latitude!!, endLocation?.longitude!!)
         return ParcelListing(user.userUid, startLoc, endLoc, parcel)
+    }
+
+    private fun generateLocationWithGeoHash(latitude: Double, longitude: Double): Location {
+        val geoHash = GeoFireUtils.getGeoHashForLocation(GeoLocation(latitude, longitude))
+        return Location(geoHash, latitude, longitude)
     }
 
     private fun onPickImageResult(): ActivityResultCallback<Uri?> = ActivityResultCallback { uri ->
