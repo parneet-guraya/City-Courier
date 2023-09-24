@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import coil.load
 import com.example.citycourier.activities.logDebug
 import com.example.citycourier.databinding.FragmentUserBinding
 import com.google.firebase.auth.FirebaseUser
@@ -31,6 +32,7 @@ class UserFragment : Fragment() {
             // user is present i.e logged in
             binding.usernameTextView.text = user.displayName
             binding.emailTextView.text = user.email
+            binding.profileImageView.load(user.photoUrl)
         }
     }
 

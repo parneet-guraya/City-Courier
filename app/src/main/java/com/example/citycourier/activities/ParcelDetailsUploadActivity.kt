@@ -160,6 +160,8 @@ class ParcelDetailsUploadActivity : AppCompatActivity() {
                     endLocation = intent.getParcelableExtra(
                         ChooseRouteActivity.EXTRA_KEY_GEOCODE_END
                     )
+                    binding.startLocationText.text = startLocation.toString()
+                    binding.endLocationText.text = endLocation.toString()
                     logDebug("activityresult-> ${startLocation?.latitude}")
                 } else {
                     // handle empty result

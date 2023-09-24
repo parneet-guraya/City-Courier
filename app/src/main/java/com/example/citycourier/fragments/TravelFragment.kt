@@ -2,7 +2,6 @@ package com.example.citycourier.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +9,28 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import com.example.citycourier.activities.ChooseRouteActivity
 import com.example.citycourier.activities.logDebug
 import com.example.citycourier.databinding.FragmentTravelBinding
+import com.example.citycourier.model.ParcelListing
+import com.example.citycourier.model.Response
+import com.example.citycourier.viewmodels.TravelViewModel
+import com.firebase.geofire.GeoLocation
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 
 class TravelFragment : Fragment() {
     private var _binding: FragmentTravelBinding? = null
+    private val viewModel: TravelViewModel by viewModels()
     private val binding get() = _binding!!
     private val openChooseRouteActivity: ActivityResultLauncher<Intent> = onChooseActivityResult()
+    private var startLocation: LatLng? = null
+    private var endLocation: LatLng? = null
+    private val _documentSnapshotList = MutableLiveData<List<DocumentSnapshot>>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +43,31 @@ class TravelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.chooseRouteButton.setOnClickListener {
+        binding.updateLocation.setOnClickListener {
             openChooseRouteActivity.launch(startChooseLocationActivityIntent())
+        }
+        viewModel.getAllDocumentsInCollection("parcel")
+        viewModel.allDocsResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Response.Failure -> {
+                    logDebug("All docs: failure: ${response.e}")
+                }
+
+                Response.Loading -> {}
+                is Response.Success -> {
+                    logDebug("docs retrieve success")
+                    if (!response.data.isEmpty) {
+                        _documentSnapshotList.value = response.data.documents
+                    }
+                }
+            }
+        }
+//        _documentSnapshotList.observe(viewLifecycleOwner) { listOfDocumentSnapshots ->
+//            logDebug(listOfDocumentSnapshots[0].toObject<ParcelListing>()?.parcel?.parcelTitle.toString())
+//        }
+        viewModel.nearByLocations.observe(viewLifecycleOwner) {
+            logDebug(it[0].toObject<ParcelListing>()?.parcel?.parcelTitle.toString())
+            logDebug(it.size.toString())
         }
     }
 
@@ -48,34 +83,26 @@ class TravelFragment : Fragment() {
                 logDebug("Choose Location activity result: ${intent != null}")
                 if (intent != null) {
                     // get the Location object here
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        logDebug(
-                            intent.getParcelableExtra(
-                                ChooseRouteActivity.EXTRA_KEY_GEOCODE_START,
-                                LatLng::class.java
-                            )
-                                .toString()
-                        )
-                        logDebug(
-                            intent.getParcelableExtra(
-                                ChooseRouteActivity.EXTRA_KEY_GEOCODE_END,
-                                LatLng::class.java
-                            )
-                                .toString()
-                        )
-                    } else {
-                        logDebug(
-                            intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_START)
-                                .toString()
-                        )
-                        logDebug(
-                            intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_END)
-                                .toString()
-                        )
-                    }
-                } else {
-                    // handle empty result
+
+                    startLocation =
+                        intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_START)
+
+                    endLocation =
+                        intent.getParcelableExtra<LatLng>(ChooseRouteActivity.EXTRA_KEY_GEOCODE_END)
+
+                    binding.startAddressNameText.text =
+                        intent.getStringExtra(ChooseRouteActivity.EXTRA_KEY_PLACE_NAME)
+
+                    viewModel.nearByLocations(
+                        GeoLocation(
+                            startLocation!!.latitude,
+                            startLocation!!.longitude
+                        ), 200000.0
+                    )
+
                 }
+            } else {
+                // handle empty result
             }
         }
     }

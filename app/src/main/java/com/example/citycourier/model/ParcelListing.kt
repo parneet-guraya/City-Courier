@@ -1,18 +1,16 @@
 package com.example.citycourier.model
 
-import com.google.firebase.firestore.DocumentId
-
 
 data class ParcelListing(
-    val userUid: String,
-    val startLocation: Location,
-    val endLocation: Location,
-    val parcel: Parcel
+    val userUid: String = "",
+    val startLocation: Location? = null,
+    val endLocation: Location? = null,
+    val parcel: Parcel? = null
 )
 
 data class Parcel
     (
-    val parcelTitle: String,
-    val parcelImageUrl: String,
-    val description: String
+    val parcelTitle: String = "",
+    val parcelImageUrl: String = "",
+    val description: String = ""
 )

@@ -31,6 +31,7 @@ class ChooseRouteActivity : AppCompatActivity(), OnClickListener {
     private var activeViewFlag: Int = INVALID_VIEW
     private var startPosition: LatLng? = null
     private var endPosition: LatLng? = null
+    private var place: Place? = null
     private val startAutoCompleteLauncher: ActivityResultLauncher<Intent> =
         onGetAutoCompleteResult()
 
@@ -137,6 +138,7 @@ class ChooseRouteActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun onGetPlaceResult(place: Place) {
+        this.place = place
         saveAndShowData(place = place)
         updateMapView(place.latLng)
     }
@@ -221,12 +223,14 @@ class ChooseRouteActivity : AppCompatActivity(), OnClickListener {
         val result = Intent()
         result.putExtra(EXTRA_KEY_GEOCODE_START, startPosition)
         result.putExtra(EXTRA_KEY_GEOCODE_END, endPosition)
+        result.putExtra(EXTRA_KEY_PLACE_NAME,place?.name)
         setResult(Activity.RESULT_OK, result)
     }
 
     companion object {
         const val EXTRA_KEY_GEOCODE_START = "EXTRA_KEY_GEOCODE_START"
         const val EXTRA_KEY_GEOCODE_END = "EXTRA_KEY_GEOCODE_END"
+        const val EXTRA_KEY_PLACE_NAME = "EXTRA_KEY_PLACE_NAME"
 
         private const val START_LOCATION_VIEW = 0
         private const val END_LOCATION_VIEW = 2
