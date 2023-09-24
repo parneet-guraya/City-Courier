@@ -53,6 +53,9 @@ dependencies {
     // firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
 
+    // firebase storage
+    implementation("com.google.firebase:firebase-storage-ktx")
+
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.7.0")
@@ -77,6 +80,9 @@ dependencies {
     // google maps
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.libraries.places:places:3.2.0")
+
+    // coil image loading
+    implementation("io.coil-kt:coil:2.4.0")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

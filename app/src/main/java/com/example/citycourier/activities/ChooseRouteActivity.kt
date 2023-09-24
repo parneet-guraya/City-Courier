@@ -210,22 +210,18 @@ class ChooseRouteActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun updateData(position: LatLng, isLocationStart: Boolean) {
-        val result = Intent()
-
         if (isLocationStart) {
             startPosition = position
         } else {
             endPosition = position
         }
-
-        setResult(Activity.RESULT_OK, result)
     }
 
     private fun saveDataInIntent() {
         val result = Intent()
         result.putExtra(EXTRA_KEY_GEOCODE_START, startPosition)
         result.putExtra(EXTRA_KEY_GEOCODE_END, endPosition)
-
+        setResult(Activity.RESULT_OK, result)
     }
 
     companion object {

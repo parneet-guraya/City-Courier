@@ -1,9 +1,10 @@
 package com.example.citycourier.service
 
+import android.net.Uri
 import com.example.citycourier.model.ParcelListing
-import java.io.File
+import com.example.citycourier.model.Response
 
 interface ParcelService {
-    suspend fun uploadParcelListing(parcelListing: ParcelListing)
-    suspend fun uploadParcelImage(file: File?): String
+    suspend fun uploadParcelListing(parcelListing: ParcelListing): Response<Boolean>
+    suspend fun addParcelImageToFirebaseStorage(uId: String, uri: Uri): Response<String>
 }

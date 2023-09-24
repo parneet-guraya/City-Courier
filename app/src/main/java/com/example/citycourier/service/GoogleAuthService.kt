@@ -1,7 +1,8 @@
-package com.example.citycourier
+package com.example.citycourier.service
 
 import android.content.Intent
 import android.content.IntentSender
+import com.example.citycourier.BuildConfig
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient

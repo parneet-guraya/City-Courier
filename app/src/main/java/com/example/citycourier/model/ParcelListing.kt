@@ -1,8 +1,10 @@
 package com.example.citycourier.model
 
+import com.google.firebase.firestore.DocumentId
+
 
 data class ParcelListing(
-    val user: User,
+    val userUid: String,
     val startLocation: Location,
     val endLocation: Location,
     val parcel: Parcel
@@ -10,7 +12,6 @@ data class ParcelListing(
 
 data class Parcel
     (
-    val userUid: String,
     val parcelTitle: String,
     val parcelImageUrl: String,
     val description: String

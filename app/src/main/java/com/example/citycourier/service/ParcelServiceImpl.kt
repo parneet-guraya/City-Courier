@@ -1,30 +1,43 @@
 package com.example.citycourier.service
 
-import com.example.citycourier.activities.logDebug
+import android.net.Uri
+import com.example.citycourier.Constants
 import com.example.citycourier.model.ParcelListing
+import com.example.citycourier.model.Response
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.File
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
+import java.io.InputStream
 
 class ParcelServiceImpl : ParcelService {
     val dataBase = Firebase.firestore
+    val storage = Firebase.storage
 
 
-    override suspend fun uploadParcelListing(parcelListing: ParcelListing) {
+    override suspend fun uploadParcelListing(parcelListing: ParcelListing): Response<Boolean> {
         // upload parcel listing
-        dataBase.collection(PARCEL_LISTING_COLLECTION_REFERENCE)
-            .add(parcelListing)
-            .addOnSuccessListener { logDebug("Uploaded parcel listings") }
-            .addOnFailureListener { logDebug(it.message.toString()) }
-
+        return try {
+            dataBase.collection(PARCEL_LISTING_COLLECTION_REFERENCE)
+                .add(parcelListing).await()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
     }
 
-    override suspend fun uploadParcelImage(file: File?): String {
-        return withContext(Dispatchers.IO) {
-            // uploading image
-            ""
+    override suspend fun addParcelImageToFirebaseStorage(
+        uId: String,
+        uri: Uri
+    ): Response<String> {
+        return try {
+            val downloadUrl = storage.reference.child(Constants.FIREBASE_STORAGE_REF_IMAGES)
+                .child(uId)
+                .putFile(uri).await()
+                .storage.downloadUrl.await()
+            Response.Success(downloadUrl.toString())
+        } catch (e: Exception) {
+            Response.Failure(e)
         }
     }
 

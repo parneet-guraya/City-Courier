@@ -10,15 +10,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.citycourier.BuildConfig
-import com.example.citycourier.GoogleAuthService
-import com.example.citycourier.TaskCallBack
+import com.example.citycourier.service.GoogleAuthService
+import com.example.citycourier.service.TaskCallBack
 import com.example.citycourier.databinding.ActivityLoginBinding
 import com.example.citycourier.viewmodels.LoginViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 const val LOG_TAG = "MYCUSTOMLOGTAG"
